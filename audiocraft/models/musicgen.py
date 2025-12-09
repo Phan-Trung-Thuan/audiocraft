@@ -89,14 +89,16 @@ class MusicGen:
             return MusicGen(name, compression_model, lm)
 
         if name not in HF_MODEL_CHECKPOINTS_MAP:
-            raise ValueError(
-                f"{name} is not a valid checkpoint name. "
-                f"Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}"
-            )
-
-        cache_dir = os.environ.get('MUSICGEN_ROOT', None)
-        compression_model = load_compression_model(name, device=device, cache_dir=cache_dir)
-        lm = load_lm_model(name, device=device, cache_dir=cache_dir)
+            # raise ValueError(
+            #     f"{name} is not a valid checkpoint name. "
+            #     f"Choose one of {', '.join(HF_MODEL_CHECKPOINTS_MAP.keys())}"
+            # )
+            compression_model = load_compression_model(name + '/compression_state_dict.bin', device=device)
+            lm = load_lm_model(name + '/state_dict.bin', device=device)
+        else:
+            cache_dir = os.environ.get('MUSICGEN_ROOT', None)
+            compression_model = load_compression_model(name, device=device, cache_dir=cache_dir)
+            lm = load_lm_model(name, device=device, cache_dir=cache_dir)
         if name == 'melody':
             lm.condition_provider.conditioners['self_wav'].match_len_on_eval = True
 
