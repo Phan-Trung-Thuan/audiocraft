@@ -17,5 +17,5 @@ transformers
 xformers
 demucs
 librosa
-gradio>=4.31.0
+# gradio>=4.31.0
 pydantic>=2.6,<3
